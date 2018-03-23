@@ -13,9 +13,10 @@ RUN apk add -U --no-cache ca-certificates iptables ncurses openssl readline \
     && tar fx softether-src-${PKG_VERSION}.tar.gz \
     && rm softether-src-${PKG_VERSION}.tar.gz \
     && cd ${VPN_VERSION}\
+    && sed -i -e "s/#define\tBUILDER_NAME.*/#define\tBUILDER_NAME\t\t\"YUKIMOCHI\"/" -e "s/#define\tBUILD_PLACE.*/#define\tBUILD_PLACE\t\t\"Scaleway ARM64\"/" src/Cedar/Cedar.h \
     && sed -i -e "s/ -m64/ /g" src/makefiles/linux_64bit.mak \
     && ./configure \
-    && make \
+    && make -j \
     && make install \
     && cd / \
     && rm -rf ${VPN_VERSION} \

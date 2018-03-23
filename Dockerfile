@@ -13,8 +13,9 @@ RUN apk add -U --no-cache ca-certificates iptables ncurses openssl readline \
     && tar fx softether-src-${PKG_VERSION}.tar.gz \
     && rm softether-src-${PKG_VERSION}.tar.gz \
     && cd ${VPN_VERSION}\
+    && sed -i -e "s/#define\tBUILDER_NAME.*/#define\tBUILDER_NAME\t\t\"YUKIMOCHI\"\r/" -e "s/#define\tBUILD_PLACE.*/#define\tBUILD_PLACE\t\t\"DockerHub\"\r/" src/Cedar/Cedar.h \
     && ./configure \
-    && make \
+    && make -j \
     && make install \
     && cd / \
     && rm -rf ${VPN_VERSION} \
