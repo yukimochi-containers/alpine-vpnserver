@@ -1,19 +1,16 @@
-FROM alpine
+FROM alpine:latest
 
-ARG VPN_VERSION=v4.27-9668
-ARG PKG_VERSION=v4.27-9668-beta
-ARG TREE_VERSION=v4.27-9668-beta-2018.05.29-tree
+ARG VPN_VERSION=v4.28-9669
+ARG SRC_URL=https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.28-9669-beta/softether-src-v4.28-9669-beta.tar.gz
 
 ENV LANG=en_US.UTF-8
 
 RUN apk add -U --no-cache ca-certificates iptables ncurses openssl readline \
     && apk add --no-cache --virt .dep build-base readline-dev openssl-dev ncurses-dev \
     && update-ca-certificates \
-    && wget http://jp.softether-download.com/files/softether/${TREE_VERSION}/Source_Code/softether-src-${PKG_VERSION}.tar.gz \
-    && tar fx softether-src-${PKG_VERSION}.tar.gz \
-    && rm softether-src-${PKG_VERSION}.tar.gz \
+    && wget ${SRC_URL} -O - | tar xz \
     && cd ${VPN_VERSION}\
-    && sed -i -e "s/#define\tBUILDER_NAME.*/#define\tBUILDER_NAME\t\t\"YUKIMOCHI\"\r/" -e "s/#define\tBUILD_PLACE.*/#define\tBUILD_PLACE\t\t\"DockerHub\"\r/" src/Cedar/Cedar.h \
+    && sed -i -e "s/#define\tBUILDER_NAME.*/#define\tBUILDER_NAME\t\t\"YUKIMOCHI\"\r/" -e "s/#define\tBUILD_PLACE.*/#define\tBUILD_PLACE\t\t\"CircleCI\"\r/" src/Cedar/Cedar.h \
     && ./configure \
     && make -j \
     && make install \
